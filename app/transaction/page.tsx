@@ -1,6 +1,6 @@
 'use client'
 import { ITransactionData } from "@/app/page";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 async function createTransaction(transactionData: ITransactionData) {
     const response = await fetch(`https://666fd7280900b5f872486532.mockapi.io/transaction`,

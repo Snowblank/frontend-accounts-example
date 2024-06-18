@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 export interface ITransactionData {
   id: string;
   price: string;
@@ -44,26 +45,46 @@ async function deleteTransaction(id: string) {
   }
 }
 
-export default async function Home() {
-  const transactionList: ITransactionData[] = await getTransaction()
+export default function Home() {
   // console.log("transactionList", transactionList)
+  const [transactionList, setTransactionList] = useState<ITransactionData[]>([]);
+  useEffect(() => {
+    const fetchData = async () => {
+      const responseData = await getTransaction();
+      setTransactionList(responseData)
+    }
+    fetchData()
+  }, [])
+
   return (
     <div>
-      Transaction List: <Link href={"/transaction"} > <button>Create</button></Link>
-      {
-        transactionList.map((tx, index) => (
-          <div key={index}>
-            {tx.id} {tx.type} {tx.price}
-
-            <Link href={`/transaction/${tx.id}`}>
-              <button className="edit-button">Edit</button>
-            </Link>
-            <button className="delete-button" onClick={() => {
-              deleteTransaction(tx.id)
-            }}>Delete</button>
-          </div>
-        ))
-      }
+      <h1 className="text-1xl font-bold">
+        Transaction List: <Link href={"/transaction"} >
+          <button className="btn-create" style={{ margin: 5 }}>Create</button></Link>
+      </h1>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {
+          transactionList.length < 1 ?
+            <p className="col-span-full text-center text-gray-500">No transactions available.</p>
+            :
+            transactionList.map((tx, index) => (
+              <Link className={`hover:bg-gray-200 ${tx.type === 'expense' ? 'bg-red-100' : 'bg-green-100'}`} href={`/transaction/${tx.id}`}>
+                <div key={index} className="bg-background p-4 rounded-lg shadow-md">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-lg font-semibold">{tx.type}</span>
+                    <span className="text-gray-700">BATH {tx.price}</span>
+                  </div>
+                  <div>
+                    <span className="text-md">{`${tx.description.slice(0, 20)}....`}</span>
+                  </div>
+                  <button className="btn-remove" onClick={() => {
+                    deleteTransaction(tx.id)
+                  }}>Delete</button>
+                </div>
+              </Link>
+            ))
+        }
+      </div>
     </div>
   );
 }
