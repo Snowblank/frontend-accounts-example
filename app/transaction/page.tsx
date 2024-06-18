@@ -31,27 +31,22 @@ export default function Page(param: { params: { id: string } }) {
             }))
     }
 
-    return <div>
-        Create Transaction
-        <div>
-            Type: <input type="text" name="type" value={transaction.type} onChange={handlerChange}></input>
-        </div>
-        <div>
-            Price: <input type="text" name="price" value={transaction.price} onChange={handlerChange}></input>
-        </div>
-        <div>
-            Description:
-            <textarea style={
-                {
-                    width: '300px',
-                    height: '200px',
-                    margin: '5px',
-                    resize: 'vertical'
-                }} name="description" value={transaction.description} onChange={handlerChange}>
-            </textarea>
-        </div>
-        <button onClick={() => {
-            createTransaction(transaction)
-        }}>Create</button>
-    </div>
+    return (
+        <div className="container mx-auto p-6 bg-white rounded-lg shadow-lg">
+            <h1 className="text-2xl font-bold mb-6">Create Transaction</h1>
+            <div className="mb-4">
+                Type: <input className="input-text focus:shadow-outline" type="text" name="type" value={transaction.type} onChange={handlerChange}></input>
+            </div>
+            <div className="mb-4">
+                Price: <input className="input-text focus:shadow-outline" type="text" name="price" value={transaction.price} onChange={handlerChange}></input>
+            </div>
+            <div className="mb-4">
+                Description:
+                <textarea className="input-text focus:shadow-outline" name="description" value={transaction.description} onChange={handlerChange}>
+                </textarea>
+            </div>
+            <button className="btn-create" onClick={() => {
+                createTransaction(transaction)
+            }}>Create</button>
+        </div>)
 }
